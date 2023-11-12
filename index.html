@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora con Python y Flask</title>
+
+    <style>
+        body {
+            font-family: 'Times New Roman', serif;
+            font-size: 14px;
+            text-align: center;
+            margin: 20px;
+            background-color: peachpuff; 
+            color: white, bold;
+        }
+        
+        h1 {
+            color: darksalmon;
+        }
+        
+        form {
+            margin-bottom: 20px;
+        }
+        
+        input, button, select {
+            padding: 10px;
+            margin: 5px;
+            color: coral; 
+            font-weight: bold;
+            background-color: linen;
+            border: 2px solid burlywood;
+        }
+        button {
+            cursor: pointer;
+            background-color: burlywood;
+            color: white; 
+            border: 1px solid white;
+            border-radius: 4px;
+        }
+        
+        button:hover {
+            background-color: white;
+            color: burlywood; 
+        }
+        label[for="entrada_nombre_variable"],
+        label[for="entrada_valor_variable"],
+        label[for="combobox_variables"],
+        label[for="expresionCalcular"],
+        p#etiquetaResultado,
+        p#pilaOperandos,
+        p#pilaOperadores {
+            color: salmon;
+            font-family: 'Times New Roman', serif; 
+            font-size: 16px;
+            font-weight: bold;
+}
+
+  </style>
+
+</head>
+<body>
+  
+    <h1>Calculadora con Python y Flask</h1>
+    
+
+
+    <label for="entrada_nombre_variable">Nombre de la Variable:</label>
+    <input type="text" id="entrada_nombre_variable" name="entrada_nombre_variable" onfocus="setearCajaActiva(this)" onclick="setearCajaActiva(this)">
+    
+    <label for="entrada_valor_variable">Valor de la Variable:</label>
+    <input type="text" id="entrada_valor_variable" name="entrada_valor_variable" onfocus="setearCajaActiva(this)" onclick="setearCajaActiva(this)">
+
+    <button type="button" onclick="crearVariable()"style="width: 120px; height: 40px; margin: 5px;">Crear Variable</button>
+
+    <br>
+
+    <button type="button" onclick="alHacerClicEnBoton('7')"style="width: 50px; height: 50px; margin: 5px;">7</button>
+    <button type="button" onclick="alHacerClicEnBoton('8')"style="width: 50px; height: 50px; margin: 5px;">8</button>
+    <button type="button" onclick="alHacerClicEnBoton('9')"style="width: 50px; height: 50px; margin: 5px;">9</button>
+    <button type="button" onclick="alHacerClicEnBoton('/')"style="width: 50px; height: 50px; margin: 5px;">/</button>
+    <button type="button" onclick="alHacerClicEnBoton('+')"style="width: 50px; height: 50px; margin: 5px;">+</button>
+
+    <br>
+
+    <button type="button" onclick="alHacerClicEnBoton('4')"style="width: 50px; height: 50px; margin: 5px;">4</button>
+    <button type="button" onclick="alHacerClicEnBoton('5')"style="width: 50px; height: 50px; margin: 5px;">5</button>
+    <button type="button" onclick="alHacerClicEnBoton('6')"style="width: 50px; height: 50px; margin: 5px;">6</button>
+    <button type="button" onclick="alHacerClicEnBoton('(')"style="width: 50px; height: 50px; margin: 5px;">(</button>
+    <button type="button" onclick="alHacerClicEnBoton('-')"style="width: 50px; height: 50px; margin: 5px;">-</button>
+
+    <br>
+
+    <button type="button" onclick="alHacerClicEnBoton('1')"style="width: 50px; height: 50px; margin: 5px;">1</button>
+    <button type="button" onclick="alHacerClicEnBoton('2')"style="width: 50px; height: 50px; margin: 5px;">2</button>
+    <button type="button" onclick="alHacerClicEnBoton('3')"style="width: 50px; height: 50px; margin: 5px;">3</button>
+    <button type="button" onclick="alHacerClicEnBoton(')')"style="width: 50px; height: 50px; margin: 5px;">)</button> 
+    <button type="button" onclick="alHacerClicEnBoton('*')"style="width: 50px; height: 50px; margin: 5px;">*</button>
+
+    <br>
+
+    <button type="button" onclick="alHacerClicEnBoton('0')"style="width: 50px; height: 50px; margin: 5px;">0</button>
+    <button type="button" onclick="alHacerClicEnBoton('.')"style="width: 50px; height: 50px; margin: 5px;">.</button>
+    <button type="button" onclick="moverCursor('izquierda')"style="width: 50px; height: 50px; margin: 5px;">◄</button>
+    <button type="button" onclick="moverCursor('derecha')"style="width: 50px; height: 50px; margin: 5px;">►</button>
+    <button type="button" onclick="insertarSimbolo('@')"style="width: 50px; height: 50px; margin: 5px;">@</button>
+
+    <br>
+    <button type="button" onclick="borrarUltimoCaracter()"style="width: 146px; height: 50px; margin: 5px;">Borrar</button>
+    <button type="button" onclick="limpiarCajaVariables()"style="width: 146px; height: 50px; margin: 5px;">Limpiar Caja</button>
+    <br>
+    <br>
+    <label for="combobox_variables">Seleccionar Variable:</label>
+    <br>
+    <select id="combobox_variables" name="combobox_variables" style="width: 15%;"></select>
+
+    <button type="button" onclick="insertarVariable()">Insertar Variable</button>
+    <br>
+    <br>
+    <label for="combobox_variables">Ingrese la expresión:</label>
+    <br>
+    <form onsubmit="event.preventDefault(); alHacerClicEnBoton('=');">
+      <input type="text" id="expresionCalcular" name="expresionCalcular" onclick="setearCajaActiva(this)" style="width: 40%;">
+      <button type="button" onclick="calcular()"style="width: 175px; height: 40px; margin: 5px;">Calcular la Expresión</button>
+
+
+      
+  </form>
+
+  <p id="etiquetaResultado"></p>
+  <p id="pilaOperandos"></p>
+  <p id="pilaOperadores"></p>
+
+
+  <br>
+    <script>
+        var cajaActiva = null;
+
+        function setearCajaActiva(input) {
+            cajaActiva = input;
+        }
+
+        function alHacerClicEnBoton(valor) {
+            if (cajaActiva) {
+                var posicionCursor = cajaActiva.selectionStart;
+                cajaActiva.value =
+                    cajaActiva.value.slice(0, posicionCursor) +
+                    valor +
+                    cajaActiva.value.slice(posicionCursor);
+                cajaActiva.setSelectionRange(posicionCursor + 1, posicionCursor + 1);
+                cajaActiva.focus();
+            }
+        }
+  
+        function moverCursor(direccion) {
+          if (cajaActiva) {
+              var posicionCursor = cajaActiva.selectionStart;
+      
+              if (direccion === 'izquierda' && posicionCursor > 0) {
+                  cajaActiva.setSelectionRange(posicionCursor - 1, posicionCursor - 1);
+              } else if (direccion === 'derecha' && posicionCursor < cajaActiva.value.length) {
+                  cajaActiva.setSelectionRange(posicionCursor + 1, posicionCursor + 1);
+              }
+              cajaActiva.focus();
+          }
+      }
+        
+      function insertarSimbolo(simbolo) {
+        cajaActiva = document.getElementById("expresionCalcular");
+        var posicionCursor = cajaActiva.selectionStart;
+        cajaActiva.value =
+            cajaActiva.value.slice(0, posicionCursor) +
+            simbolo +
+            cajaActiva.value.slice(posicionCursor);
+        cajaActiva.setSelectionRange(posicionCursor + 1, posicionCursor + 1);
+    }
+    
+    function calcular() {
+        cajaActiva = document.getElementById("expresionCalcular");
+        var expresion = cajaActiva.value;
+    
+        fetch('/calcular', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({ 'expresion': expresion }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            var resultado = "Resultado: " + data.resultado;
+    
+            if (expresion.includes('@')) {
+
+                var operandos = data.pila_operandos.join('').match(/(?:\d+\.\d+|\d+|[^\s@()+-/*]+)/g);
+                var pilaOperandos = "Pila de Operandos: " + operandos.join(', ');
+    
+                var operadores = data.pila_operadores.flatMap(token => token.match(/[@()+-/*]+/g));
+                var pilaOperadores = "Pila de Operadores: " + operadores.join(', ');
+
+                document.getElementById("pilaOperandos").innerText = pilaOperandos;
+                document.getElementById("pilaOperadores").innerText = pilaOperadores;
+            } else {
+
+                document.getElementById("pilaOperandos").innerText = "";
+                document.getElementById("pilaOperadores").innerText = "";
+            }
+    
+
+            document.getElementById("etiquetaResultado").innerText = resultado;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+
+        function crearVariable() {
+          var nombre = document.getElementById("entrada_nombre_variable").value;
+          var valor = document.getElementById("entrada_valor_variable").value;
+
+          if (nombre !== "") {
+              fetch('/crear_variable', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/x-www-form-urlencoded',
+                  },
+                  body: new URLSearchParams({ 'nombre': nombre, 'valor': valor }),
+              })
+              .then(response => response.json())
+              .then(data => {
+
+                  actualizarComboboxVariables(data.variables);
+
+                  document.getElementById("entrada_nombre_variable").value = "";
+                  document.getElementById("entrada_valor_variable").value = "";
+              })
+              .catch(error => {
+                  console.error('Error:', error);
+              });
+          } else {
+              console.error('Error: Nombre de variable inválido');
+          }
+      }
+
+      function borrarUltimoCaracter() {
+        if (cajaActiva) {
+            var posicionCursor = cajaActiva.selectionStart;
+            cajaActiva.value = cajaActiva.value.slice(0, posicionCursor - 1) + cajaActiva.value.slice(posicionCursor);
+            cajaActiva.setSelectionRange(posicionCursor - 1, posicionCursor - 1);
+            cajaActiva.focus();
+        }
+    }
+
+    function insertarVariable() {
+      if (cajaActiva && cajaActiva.id === "expresionCalcular") {
+          var variableSeleccionada = document.getElementById("combobox_variables").value;
+          var posicionCursor = cajaActiva.selectionStart;
+          cajaActiva.value =
+              cajaActiva.value.slice(0, posicionCursor) +
+              variableSeleccionada +
+              cajaActiva.value.slice(posicionCursor);
+          cajaActiva.setSelectionRange(posicionCursor + variableSeleccionada.length, posicionCursor + variableSeleccionada.length);
+          cajaActiva.focus();
+      }
+  }
+        function actualizarComboboxVariables(variables) {
+            var combobox = document.getElementById("combobox_variables");
+            combobox.innerHTML = "";
+            variables.forEach(function(variable) {
+                var option = document.createElement("option");
+                option.text = variable;
+                combobox.add(option);
+            });
+        }
+
+        function limpiarCajaVariables() {
+          if (cajaActiva) {
+              cajaActiva.value = "";
+              cajaActiva.focus();
+          }
+      }
+    </script>
+</body>
+</html>
